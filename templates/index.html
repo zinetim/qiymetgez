@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="intro">
+  <h1>Eyni məhsul, fərqli qiymət.</h1>
+  <p class="lead">{{ d.products|length }} məhsul, {{ d.markets|length }} market{% if deals %}, {{ deals }} endirimdə{% endif %}.</p>
+</section>
+
+<form class="filters" id="filters" action="{{ url_for('index') }}">
+  {% if args.q %}<input type="hidden" name="q" value="{{ args.q }}">{% endif %}
+  <label>Market
+    <select name="market">
+      <option value="">Hamısı</option>
+      {% for k, n in d.markets %}<option value="{{ k }}" {{ 'selected' if args.market == k }}>{{ n }}</option>{% endfor %}
+    </select>
+  </label>
+  <label>Kateqoriya
+    <select name="cat">
+      <option value="">Hamısı</option>
+      {% for c, n in cats %}<option value="{{ c }}" {{ 'selected' if args.cat == c }}>{{ c }} ({{ n }})</option>{% endfor %}
+    </select>
+  </label>
+  <label>Sıralama
+    <select name="sort">
+      {% for k, v in sorts.items() %}<option value="{{ k }}" {{ 'selected' if args.sort == k }}>{{ v[0] }}</option>{% endfor %}
+    </select>
+  </label>
+  <noscript><button type="submit">Tətbiq et</button></noscript>
+</form>
+<script>document.querySelectorAll('#filters select').forEach(s => s.addEventListener('change', () => s.form.submit()));</script>
+
+{% if products %}
+  <p class="count">{{ total }} nəticə{% if args.q %} · “{{ args.q }}”{% endif %}</p>
+  <div class="grid">{% for p in products %}{% include "_card.html" %}{% endfor %}</div>
+
+  {% if pages > 1 %}
+  <nav class="pager" aria-label="Səhifələr">
+    {% if page > 1 %}<a href="{{ url_for('index', **dict(args, page=page-1)) }}">Əvvəlki</a>{% endif %}
+    {% for n in range(1, pages + 1) %}
+      <a href="{{ url_for('index', **dict(args, page=n)) }}" {% if n == page %}aria-current="page"{% endif %}>{{ n }}</a>
+    {% endfor %}
+    {% if page < pages %}<a href="{{ url_for('index', **dict(args, page=page+1)) }}">Növbəti</a>{% endif %}
+  </nav>
+  {% endif %}
+{% else %}
+  <div class="empty">
+    <h2>Heç nə tapılmadı</h2>
+    <p>Axtarışı qısaldın və ya filtrləri sıfırlayın.</p>
+    <a class="btn" href="{{ url_for('index') }}">Hamısını göstər</a>
+  </div>
+{% endif %}
+{% endblock %}

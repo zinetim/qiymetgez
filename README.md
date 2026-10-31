@@ -1,1 +1,55 @@
-# qiymetgez
+# Qiymətgəz: supermarket qiymət müqayisəsi
+
+Bot marketlərin saytından **ad, qiymət, köhnə qiymət, endirim, qramaj, kod/barkod, şəkil** toplayır,
+sayt isə onları kartlarda göstərir, qiymət tarixçəsi və marketlər arası müqayisə verir.
+
+```
+GitHub Actions (hər 6 saat)  →  python -m scraper.run  →  data/products.json  →  git push
+                                                                                   ↓
+                                                      Render avtomatik yenidən yayımlayır (Flask + gunicorn)
+```
+
+Botu Render-də yox, GitHub Actions-da işlədirik, çünki Render-in pulsuz planında fayl sistemi müvəqqətidir
+və bəzi saytlar server IP-lərini bloklayır. Data repoda saxlanır, hər yeniləmə git tarixçəsində görünür.
+
+## 1. Lokal işə salmaq
+
+```bash
+python -m venv .venv && source .venv/bin/activate      # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+python -m scraper.run --details      # botu işə sal (detallı rejim: hər məhsulun öz səhifəsi də oxunur)
+python app.py                        # http://localhost:5000
+```
+
+`data/products.json` içində artıq arazmarket.az-dan 22 məhsul var, ona görə sayt bot işləmədən də açılır.
+
+## 2. GitHub
+
+1. Yeni repo yaradın (məs. `qiymetgez`), bu qovluğu push edin.
+2. **Settings → Actions → General → Workflow permissions → Read and write permissions** seçin.
+3. **Actions → scrape → Run workflow** ilə ilk dəfə əl ilə işə salın. Yaşıl olsa, data yenilənib.
+4. `scraper/base.py`-dakı `YOUR_USER` yerinə GitHub adınızı yazın (bot saytlara özünü düzgün təqdim etsin).
+
+## 3. Render
+
+1. render.com → **New → Blueprint** → repo seçin. `render.yaml` hər şeyi özü qurur.
+2. Və ya əl ilə: **Web Service**, Build `pip install -r requirements.txt`, Start `gunicorn app:app`.
+3. Bot hər dəfə `data/products.json`-u commit edəndə Render saytı avtomatik yeniləyir.
+
+Pulsuz planda sayt 15 dəqiqə istifadəsiz qalanda yatır, ilk açılış 30-50 saniyə çəkə bilər.
+
+## 4. Yeni kateqoriya və ya market
+
+- **Kateqoriya:** `scraper/araz.py` içində `categories` siyahısına sətir əlavə edin.
+- **Market:** `scraper/_template.py`-ı kopyalayın, selektorları yazın, `scraper/markets.py`-a əlavə edin.
+  Eyni məhsul avtomatik qruplaşır (barkod eynidirsə, yaxud ad + qramaj ≥ 75% uyğundursa) və məhsul səhifəsində müqayisə cədvəli görünür.
+
+## Bilmək lazım olanlar
+
+- **Barkod:** arazmarket.az saytında real barkod (EAN) göstərilmir, yalnız daxili "Məhsul kodu" var.
+  Bot onu `code` kimi saxlayır. Bot səhifədə `Barkod/EAN` yazısı görsə, `barcode`-a yazır və müqayisə dəqiqləşir.
+- **Qramaj:** ayrıca sahə yoxdur, addan çıxarılır (`1kq`, `500 qr`, `0.5 L`). Adında rəqəm olmayan "kq" malları çəkili sayılır (1 kq).
+- **Şəkillər** marketin serverindən göstərilir (kopyalanmır). Açıq yayıma keçəndə marketlərdən icazə almaq və ya şəkilləri
+  öz yaddaşınıza yükləmək daha təhlükəsizdir. Eyni şey qiymət məlumatlarının istifadəsinə də aiddir: saytın istifadə şərtlərinə və `robots.txt`-ə baxın.
+- **Sayt dəyişsə** (Araz dizaynı yeniləyəndə) yalnız `scraper/araz.py` düzəlir. Testlər: `python -m pytest`.
+- **JS ilə yüklənən saytlar** üçün `requests` kifayət etməyə bilər, onda Playwright-a keçmək lazım olur.

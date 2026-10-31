@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="az">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Qiymətgəz · supermarket qiymətlərinin müqayisəsi{% endblock %}</title>
+<meta name="description" content="Supermarketlərdə eyni məhsulun qiymətini yan-yana müqayisə et.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="{{ url_for('index') }}"><span class="brand-tag">₼</span>Qiymətgəz</a>
+    <form class="search" action="{{ url_for('index') }}" role="search">
+      <input type="search" name="q" value="{{ request.args.get('q','') }}" placeholder="Məhsul axtar: toyuq, süd, çay…" aria-label="Axtarış">
+      <button type="submit">Axtar</button>
+    </form>
+  </div>
+</header>
+<main class="wrap">{% block content %}{% endblock %}</main>
+<footer class="foot">
+  <div class="wrap">
+    <p>Qiymətlər marketlərin saytlarından avtomatik götürülür və mağaza qiymətlərindən fərqli ola bilər.
+       Son yenilənmə: <strong>{{ d.updated|dt }}</strong></p>
+    <p><a href="{{ url_for('api_products') }}">JSON API</a></p>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}{{ p.name }} · Qiymətgəz{% endblock %}
+{% block content %}
+<nav class="crumbs"><a href="{{ url_for('index') }}">Ana səhifə</a>
+  {% if p.category %} / <a href="{{ url_for('index', cat=p.category) }}">{{ p.category }}</a>{% endif %}</nav>
+
+<section class="detail">
+  <div class="detail-img">
+    <img src="{{ p.image or p.image_thumb }}" alt="{{ p.name }}" referrerpolicy="no-referrer" onerror="this.style.visibility='hidden'">
+    {% if p.discount %}<span class="off">−{{ p.discount }}%</span>{% endif %}
+  </div>
+  <div class="detail-info">
+    <p class="mk">{{ p.market_name }}</p>
+    <h1>{{ p.name }}</h1>
+    <div class="price-row big">
+      <span class="tag">{{ p.price|money }} <small>₼</small></span>
+      {% if p.old_price %}<s>{{ p.old_price|money }} ₼</s>{% endif %}
+    </div>
+    <dl class="facts">
+      {% if p.weight_label %}<dt>Qramaj</dt><dd>{{ p.weight_label }}</dd>{% endif %}
+      {% if p.unit_price %}<dt>1 {{ p.unit_label }} qiyməti</dt><dd>{{ p.unit_price|money }} ₼</dd>{% endif %}
+      {% if p.barcode %}<dt>Barkod</dt><dd>{{ p.barcode }}</dd>{% endif %}
+      {% if p.code %}<dt>Market kodu</dt><dd>{{ p.code }}</dd>{% endif %}
+      {% if p.category %}<dt>Kateqoriya</dt><dd>{{ p.category }}</dd>{% endif %}
+      <dt>İlk görünmə</dt><dd>{{ p.first_seen }}</dd>
+    </dl>
+    <a class="btn" href="{{ p.url }}" target="_blank" rel="noopener nofollow">Market saytında aç</a>
+
+    <div class="hist">
+      <h2>Qiymət tarixçəsi</h2>
+      {% if spark %}
+        <svg viewBox="0 0 {{ spark.w }} {{ spark.h }}" role="img" aria-label="Qiymət qrafiki">
+          <polyline points="{{ spark.points }}" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+        </svg>
+        <p class="sub">ən aşağı {{ spark.lo|money }} ₼ · ən yüksək {{ spark.hi|money }} ₼ · {{ p.history|length }} ölçü</p>
+      {% else %}
+        <p class="sub">Tarixçə hər yenilənmədə toplanır. Bir neçə gündən sonra qrafik görünəcək.</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<section class="compare">
+  <h2>Marketlərdə müqayisə</h2>
+  {% if same|length > 1 %}
+  <table>
+    <thead><tr><th>Market</th><th>Məhsul</th><th>Qiymət</th><th>Fərq</th></tr></thead>
+    <tbody>
+    {% for x in same %}
+      <tr {% if x.id == p.id %}class="me"{% endif %}>
+        <td>{{ x.market_name }}</td>
+        <td><a href="{{ url_for('product', pid=x.id) }}">{{ x.name }}</a> <span class="chip">{{ x.weight_label }}</span></td>
+        <td><strong>{{ x.price|money }} ₼</strong>{% if loop.first %} <span class="best">ən ucuz</span>{% endif %}</td>
+        <td>{% if loop.first %}-{% else %}+{{ (x.price - same[0].price)|money }} ₼{% endif %}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="sub">Bu məhsul hələ başqa marketdə tapılmayıb. Yeni market əlavə olunduqca avtomatik müqayisə görünəcək.</p>
+  {% endif %}
+</section>
+
+{% if related %}
+<section>
+  <h2>Eyni kateqoriyadan</h2>
+  <div class="grid">{% for p in related %}{% include "_card.html" %}{% endfor %}</div>
+</section>
+{% endif %}
+{% endblock %}
