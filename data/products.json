@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-28T05:54:45+00:00",
+ "updated": "2026-10-31T12:18:18+00:00",
  "products": [
   {
    "id": "araz-1000024346",
@@ -638,6 +638,354 @@
     ]
    ],
    "first_seen": "2026-10-28"
+  },
+  {
+   "id": "bazarstore-kq",
+   "market": "bazarstore",
+   "market_name": "Bazarstore",
+   "name": "HİCAZ TƏZƏ BUD BÜTÖV AÇIQ KQ",
+   "category": "Təzə toyuq",
+   "price": 5.99,
+   "old_price": null,
+   "discount": null,
+   "weight_value": 1.0,
+   "weight_unit": "kg",
+   "weight_label": "1 kq (çəkili)",
+   "unit_price": 5.99,
+   "unit_label": "kq",
+   "barcode": null,
+   "code": null,
+   "own_brand": false,
+   "image": null,
+   "image_thumb": null,
+   "url": "https://bazarstore.az/hicaz-teze-bud-aciq-kq",
+   "scraped_at": "2026-10-31T12:18:18+00:00",
+   "history": [
+    [
+     "2026-10-31",
+     5.99
+    ]
+   ],
+   "first_seen": "2026-10-31"
+  },
+  {
+   "id": "bazarstore-kq",
+   "market": "bazarstore",
+   "market_name": "Bazarstore",
+   "name": "HİCAZ TƏZƏ QANAD AÇIQ KQ",
+   "category": "Təzə toyuq",
+   "price": 7.29,
+   "old_price": null,
+   "discount": null,
+   "weight_value": 1.0,
+   "weight_unit": "kg",
+   "weight_label": "1 kq (çəkili)",
+   "unit_price": 7.29,
+   "unit_label": "kq",
+   "barcode": null,
+   "code": null,
+   "own_brand": false,
+   "image": null,
+   "image_thumb": null,
+   "url": "https://bazarstore.az/hicaz-teze-qanad-aciq-kq",
+   "scraped_at": "2026-10-31T12:18:18+00:00",
+   "history": [
+    [
+     "2026-10-31",
+     7.29
+    ]
+   ],
+   "first_seen": "2026-10-31"
+  },
+  {
+   "id": "bazarstore-kg",
+   "market": "bazarstore",
+   "market_name": "Bazarstore",
+   "name": "HİCAZ TƏZƏ TOYUQ PAKET KQ",
+   "category": "Təzə toyuq",
+   "price": 7.19,
+   "old_price": null,
+   "discount": null,
+   "weight_value": 1.0,
+   "weight_unit": "kg",
+   "weight_label": "1 kq (çəkili)",
+   "unit_price": 7.19,
+   "unit_label": "kq",
+   "barcode": null,
+   "code": null,
+   "own_brand": false,
+   "image": null,
+   "image_thumb": null,
+   "url": "https://bazarstore.az/hicaz-teze-toyuq-paket-kg",
+   "scraped_at": "2026-10-31T12:18:18+00:00",
+   "history": [
+    [
+     "2026-10-31",
+     7.19
+    ]
+   ],
+   "first_seen": "2026-10-31"
+  },
+  {
+   "id": "bazarstore-eded",
+   "market": "bazarstore",
+   "market_name": "Bazarstore",
+   "name": "KƏND ÇOLPASI ƏDƏD",
+   "category": "Təzə toyuq",
+   "price": 7.3,
+   "old_price": null,
+   "discount": null,
+   "weight_value": null,
+   "weight_unit": null,
+   "weight_label": "",
+   "unit_price": null,
+   "unit_label": "",
+   "barcode": null,
+   "code": null,
+   "own_brand": false,
+   "image": null,
+   "image_thumb": null,
+   "url": "https://bazarstore.az/kend-colpasi-eded",
+   "scraped_at": "2026-10-31T12:18:18+00:00",
+   "history": [
+    [
+     "2026-10-31",
+     7.3
+    ]
+   ],
+   "first_seen": "2026-10-31"
+  },
+  {
+   "id": "bazarstore-kq",
+   "market": "bazarstore",
+   "market_name": "Bazarstore",
+   "name": "MƏRCAN TƏZƏ TOYUQ BUD BÜTÖV AÇIQ KQ",
+   "category": "Təzə toyuq",
+   "price": 6.75,
+   "old_price": null,
+   "discount": null,
+   "weight_value": 1.0,
+   "weight_unit": "kg",
+   "weight_label": "1 kq (çəkili)",
+   "unit_price": 6.75,
+   "unit_label": "kq",
+   "barcode": null,
+   "code": null,
+   "own_brand": false,
+   "image": null,
+   "image_thumb": null,
+   "url": "https://bazarstore.az/mercan-toyuq-ayaqlari-aciq-kq",
+   "scraped_at": "2026-10-31T12:18:18+00:00",
+   "history": [
+    [
+     "2026-10-31",
+     6.75
+    ]
+   ],
+   "first_seen": "2026-10-31"
+  },
+  {
+   "id": "bazarstore-kq",
+   "market": "bazarstore",
+   "market_name": "Bazarstore",
+   "name": "MƏRCAN TƏZƏ TOYUQ BUD BUTULKA AÇIQ KQ",
+   "category": "Təzə toyuq",
+   "price": 7.5,
+   "old_price": null,
+   "discount": null,
+   "weight_value": 1.0,
+   "weight_unit": "kg",
+   "weight_label": "1 kq (çəkili)",
+   "unit_price": 7.5,
+   "unit_label": "kq",
+   "barcode": null,
+   "code": null,
+   "own_brand": false,
+   "image": null,
+   "image_thumb": null,
+   "url": "https://bazarstore.az/m%C9%99rcan-t%C9%99z%C9%99-toyuq-bud-butulka-a%C3%A7iq-kq",
+   "scraped_at": "2026-10-31T12:18:18+00:00",
+   "history": [
+    [
+     "2026-10-31",
+     7.5
+    ]
+   ],
+   "first_seen": "2026-10-31"
+  },
+  {
+   "id": "bazarstore-kq",
+   "market": "bazarstore",
+   "market_name": "Bazarstore",
+   "name": "MƏRCAN TƏZƏ TOYUQ PAKET KQ",
+   "category": "Təzə toyuq",
+   "price": 7.75,
+   "old_price": null,
+   "discount": null,
+   "weight_value": 1.0,
+   "weight_unit": "kg",
+   "weight_label": "1 kq (çəkili)",
+   "unit_price": 7.75,
+   "unit_label": "kq",
+   "barcode": null,
+   "code": null,
+   "own_brand": false,
+   "image": null,
+   "image_thumb": null,
+   "url": "https://bazarstore.az/mercan-teze-toyuq-paket-kq",
+   "scraped_at": "2026-10-31T12:18:18+00:00",
+   "history": [
+    [
+     "2026-10-31",
+     7.75
+    ]
+   ],
+   "first_seen": "2026-10-31"
+  },
+  {
+   "id": "bazarstore-kq",
+   "market": "bazarstore",
+   "market_name": "Bazarstore",
+   "name": "SƏBA TƏZƏ BUD BUTULKA AÇIQ KQ",
+   "category": "Təzə toyuq",
+   "price": 5.99,
+   "old_price": null,
+   "discount": null,
+   "weight_value": 1.0,
+   "weight_unit": "kg",
+   "weight_label": "1 kq (çəkili)",
+   "unit_price": 5.99,
+   "unit_label": "kq",
+   "barcode": null,
+   "code": null,
+   "own_brand": false,
+   "image": null,
+   "image_thumb": null,
+   "url": "https://bazarstore.az/seba-teze-bud-butulka-aciq-kq",
+   "scraped_at": "2026-10-31T12:18:18+00:00",
+   "history": [
+    [
+     "2026-10-31",
+     5.99
+    ]
+   ],
+   "first_seen": "2026-10-31"
+  },
+  {
+   "id": "bazarstore-kq",
+   "market": "bazarstore",
+   "market_name": "Bazarstore",
+   "name": "SƏBA TƏZƏ BUD DİBİ AÇIQ KQ",
+   "category": "Təzə toyuq",
+   "price": 6.99,
+   "old_price": null,
+   "discount": null,
+   "weight_value": 1.0,
+   "weight_unit": "kg",
+   "weight_label": "1 kq (çəkili)",
+   "unit_price": 6.99,
+   "unit_label": "kq",
+   "barcode": null,
+   "code": null,
+   "own_brand": false,
+   "image": null,
+   "image_thumb": null,
+   "url": "https://bazarstore.az/seba-teze-bud-dibi-aciq-kq",
+   "scraped_at": "2026-10-31T12:18:18+00:00",
+   "history": [
+    [
+     "2026-10-31",
+     6.99
+    ]
+   ],
+   "first_seen": "2026-10-31"
+  },
+  {
+   "id": "bazarstore-kg",
+   "market": "bazarstore",
+   "market_name": "Bazarstore",
+   "name": "SƏBA TƏZƏ CİYƏR AÇIQ KQ",
+   "category": "Təzə toyuq",
+   "price": 3.65,
+   "old_price": null,
+   "discount": null,
+   "weight_value": 1.0,
+   "weight_unit": "kg",
+   "weight_label": "1 kq (çəkili)",
+   "unit_price": 3.65,
+   "unit_label": "kq",
+   "barcode": null,
+   "code": null,
+   "own_brand": false,
+   "image": null,
+   "image_thumb": null,
+   "url": "https://bazarstore.az/seba-teze-ciyer-aciq-kg",
+   "scraped_at": "2026-10-31T12:18:18+00:00",
+   "history": [
+    [
+     "2026-10-31",
+     3.65
+    ]
+   ],
+   "first_seen": "2026-10-31"
+  },
+  {
+   "id": "bazarstore-q",
+   "market": "bazarstore",
+   "market_name": "Bazarstore",
+   "name": "GULUM ŞİRİN QARĞIDALI 425 Q",
+   "category": "Konserva",
+   "price": 1.89,
+   "old_price": 2.4,
+   "discount": 21,
+   "weight_value": 0.425,
+   "weight_unit": "kg",
+   "weight_label": "425 qr",
+   "unit_price": 4.45,
+   "unit_label": "kq",
+   "barcode": null,
+   "code": null,
+   "own_brand": false,
+   "image": null,
+   "image_thumb": null,
+   "url": "https://bazarstore.az/gulum-sirin-qargidali-425-q",
+   "scraped_at": "2026-10-31T12:18:18+00:00",
+   "history": [
+    [
+     "2026-10-31",
+     1.89
+    ]
+   ],
+   "first_seen": "2026-10-31"
+  },
+  {
+   "id": "bazarstore-kg",
+   "market": "bazarstore",
+   "market_name": "Bazarstore",
+   "name": "XİYAR KG",
+   "category": "Meyvə, tərəvəz",
+   "price": 1.69,
+   "old_price": null,
+   "discount": null,
+   "weight_value": null,
+   "weight_unit": null,
+   "weight_label": "",
+   "unit_price": null,
+   "unit_label": "",
+   "barcode": null,
+   "code": null,
+   "own_brand": false,
+   "image": null,
+   "image_thumb": null,
+   "url": "https://bazarstore.az/xiyar-kg",
+   "scraped_at": "2026-10-31T12:18:18+00:00",
+   "history": [
+    [
+     "2026-10-31",
+     1.69
+    ]
+   ],
+   "first_seen": "2026-10-31"
   }
  ]
 }

@@ -67,7 +67,17 @@ class BazarstoreScraper(BaseScraper):
 
     def parse_listing(self, html, category):
         soup = BeautifulSoup(html, "html.parser")
-        cards = soup.select("div.product-item[data-productid]") or soup.select("div.product-item")
+        cards = soup.select("[data-productid].product-item") or soup.select(".product-item")
+        if not cards:  # tema fərqli sinif işlədirsə: başlığı olan və qiyməti içində olan ən yaxın blok
+            for t in soup.select(".product-title"):
+                node = t
+                for _ in range(5):
+                    node = node.parent
+                    if node is None:
+                        break
+                    if PRICE.search(node.get_text(" ", strip=True)):
+                        cards.append(node)
+                        break
         out = []
         for c in cards:
             a = c.select_one(".product-title a, h2 a, h3 a")

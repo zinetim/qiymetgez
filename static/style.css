@@ -99,3 +99,18 @@ button:hover,.btn:hover{opacity:.88}
 @media (prefers-reduced-motion:no-preference){.card{transition:transform .15s}.card:hover{transform:translateY(-2px)}}
 
 .noimg{display:grid;place-items:center;width:100%;height:100%;font:800 3rem Onest,sans-serif;color:var(--muted);background:var(--bg);border-radius:10px}
+
+/* market zolağı */
+.mkts{list-style:none;display:flex;flex-wrap:wrap;gap:8px;padding:0;margin:16px 0 0}
+.mkts a,.mkts .soon{display:inline-flex;gap:8px;align-items:center;padding:7px 13px;border:1.5px solid var(--line);background:var(--card);border-radius:999px;text-decoration:none;font-weight:600;font-size:.9rem}
+.mkts b{font-weight:700;color:var(--muted);font-size:.82rem}
+.mkts a[aria-current]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.mkts a[aria-current] b{color:inherit;opacity:.75}
+.mkts .soon{opacity:.55;border-style:dashed;cursor:help}
+/* kartda digər marketlər */
+.others{list-style:none;margin:6px 0 0;padding:8px 0 0;border-top:1px dashed var(--line);display:flex;flex-direction:column;gap:3px}
+.others a{display:flex;gap:8px;align-items:baseline;text-decoration:none;font-size:.84rem}
+.others span{color:var(--muted);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.others i{font-style:normal;font-size:.78rem;font-weight:700}
+.others i.up{color:var(--save)}.others i.down{color:#C2410C}
+@media (prefers-color-scheme:dark){.others i.down{color:#FB923C}}

@@ -66,3 +66,21 @@ Pulsuz planda sayt 15 dəqiqə istifadəsiz qalanda yatır, ilk açılış 30-50
 - Hər marketdə eyni kateqoriyaları izləyin, yoxsa müqayisə üçün ortaq məhsul tapılmaz (məs. Araz-a da süd, çay, yağ kateqoriyaları əlavə edin).
 - Marketlər arası eyni məhsul avtomatik tapılır: ad (hərf/ə-ö fərqi nəzərə alınmadan) + qramaj ≥ 75% uyğundursa, yaxud barkod eynidirsə.
 - Bot gündə bir dəfə işləyir (03:00 UTC). Saytları yormamaq üçün sorğular arasında 0.8-1.6 san fasilə var.
+
+## Problem olsa: botu yoxlamaq
+
+Sayt market zolağında marketin adı həmişə görünür. Yanında `0` və ya "soon" işarəsi varsa, bot hələ o marketin datasını yazmayıb. Səbəbi tapmaq üçün (Codespaces və ya lokal):
+
+```bash
+python -m scraper.debug bazarstore /teze-toyuq
+```
+
+Bu əmr bir səhifəni çəkir və neçə məhsul tapıldığını, qiymət, köhnə qiymət və şəkli göstərir. `Tapılan məhsul: 0` çıxarsa:
+1. `SƏHİFƏ ALINMADI` yazılıbsa, sayt sorğunu bloklayıb (403/429). Fasiləni artırın (`delay` in `scraper/base.py`).
+2. HTML alınıb, amma 0 məhsuldursa, `/tmp/debug_bazarstore.html` faylına baxın: `grep -c product-item /tmp/debug_bazarstore.html`. Selektorlar dəyişibsə, `scraper/bazarstore.py` içindəki `parse_listing` düzəldilir.
+
+GitHub Actions-da: **Actions → scrape → son işləmə → "Run scraper" addımı** log-unda hər marketin neçə məhsul yazdığı görünür.
+
+## Data faylı haqqında
+
+`data/products.json` botun yazdığı faylıdır. Zip-dəki versiya yalnız başlanğıc datadır (Araz 22 + Bazarstore 12 məhsul). Bot işlədikcə onu real data ilə əvəz edir. Bot yalnız öz marketinin məhsullarını yeniləyir, digər marketə toxunmur.

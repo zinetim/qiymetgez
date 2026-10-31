@@ -76,3 +76,31 @@ def test_cross_market_real_names():
     mer_a, mer_b = by["Mercan Təzə Toyuq Paket Soyudulmuş 1kq"], by["MƏRCAN TƏZƏ TOYUQ PAKET KQ"]
     assert mer_a["group"] == mer_b["group"]
     assert mer_a["is_cheapest"] and not mer_b["is_cheapest"]   # 6.59 < 7.75
+
+
+def test_bazarstore_fallback_without_product_item_class():
+    from scraper.bazarstore import BazarstoreScraper
+    from tests.fixture_bazar import listing_html as bz
+    html = bz().replace("product-item", "box")
+    items = BazarstoreScraper().parse_listing(html, "x")
+    assert len(items) == 12 and items[0]["price"] == 5.99
+
+
+def test_markets_listed_even_without_data(tmp_path, monkeypatch):  # pytest tələb edir
+    """Data boş olsa da index-də hər iki market görünməlidir."""
+    import json, importlib, app as appmod
+    f = tmp_path / "p.json"
+    f.write_text(json.dumps({"updated": None, "products": []}))
+    monkeypatch.setattr(appmod, "DATA_FILE", f)
+    appmod._cache.update({"mtime": None, "payload": None})
+    html = appmod.app.test_client().get("/").get_data(as_text=True)
+    assert "Bazarstore" in html and "Araz Supermarket" in html
+    appmod._cache.update({"mtime": None, "payload": None})
+
+
+def test_cards_show_other_market_prices():
+    import app as appmod
+    appmod._cache.update({"mtime": None, "payload": None})
+    c = appmod.app.test_client()
+    html = c.get("/?q=hicaz+paket").get_data(as_text=True)
+    assert "Bazarstore" in html and "Araz Supermarket" in html and 'class="others"' in html

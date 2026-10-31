@@ -3,6 +3,13 @@
 <section class="intro">
   <h1>Eyni məhsul, fərqli qiymət.</h1>
   <p class="lead">{{ d.products|length }} məhsul, {{ d.markets|length }} market{% if deals %}, {{ deals }} endirimdə{% endif %}.</p>
+  <ul class="mkts">
+    <li><a href="{{ url_for('index', **dict(args, market='', page=1)) }}" {% if not args.market %}aria-current="true"{% endif %}>Hamısı <b>{{ d.products|length }}</b></a></li>
+    {% for m in d.markets %}
+    <li>{% if m.count %}<a href="{{ url_for('index', **dict(args, market=m.key, page=1)) }}" {% if args.market == m.key %}aria-current="true"{% endif %}>{{ m.name }} <b>{{ m.count }}</b></a>
+        {% else %}<span class="soon" title="Bot hələ bu marketin datasını yazmayıb">{{ m.name }} <b>0</b></span>{% endif %}</li>
+    {% endfor %}
+  </ul>
 </section>
 
 <form class="filters" id="filters" action="{{ url_for('index') }}">
@@ -10,7 +17,7 @@
   <label>Market
     <select name="market">
       <option value="">Hamısı</option>
-      {% for k, n in d.markets %}<option value="{{ k }}" {{ 'selected' if args.market == k }}>{{ n }}</option>{% endfor %}
+      {% for m in d.markets %}<option value="{{ m.key }}" {{ 'selected' if args.market == m.key }}>{{ m.name }} ({{ m.count }})</option>{% endfor %}
     </select>
   </label>
   <label>Kateqoriya

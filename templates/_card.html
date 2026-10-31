@@ -15,6 +15,12 @@
       <span class="tag">{{ p.price|money }} <small>₼</small></span>
       {% if p.old_price %}<s>{{ p.old_price|money }}</s>{% endif %}
     </div>
+    {% if p.others %}
+    <ul class="others">
+      {% for o in p.others %}<li><a href="{{ url_for('product', pid=o.id) }}"><span>{{ o.market_name }}</span><b>{{ o.price|money }} ₼</b>
+        <i class="{{ 'up' if o.price > p.price else 'down' }}">{{ '+' if o.price > p.price else '−' }}{{ (o.price - p.price)|abs|money }}</i></a></li>{% endfor %}
+    </ul>
+    {% endif %}
     {% if p.compare_count > 1 %}
       <a class="cmp" href="{{ url_for('product', pid=p.id) }}">{{ p.compare_count }} marketdə müqayisə et{% if p.is_cheapest %} (ən ucuz bu){% endif %}</a>
     {% endif %}

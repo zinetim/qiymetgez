@@ -8,6 +8,7 @@ from flask import Flask, abort, jsonify, render_template, request, url_for
 
 from core import matcher, store
 from core.textutil import fold
+from scraper.markets import MARKETS
 
 BASE = Path(__file__).resolve().parent
 DATA_FILE = Path(os.environ.get("DATA_FILE", BASE / "data" / "products.json"))
@@ -36,12 +37,20 @@ def get_data():
         raw = store.load(DATA_FILE)
         products = raw["products"]
         groups = matcher.annotate(products)
+        for pr in products:  # eyni məhsulun digər marketlərdəki qiymətləri (kartda göstərilir)
+            pr["others"] = [{"id": o["id"], "market": o["market"], "market_name": o["market_name"], "price": o["price"]}
+                            for o in groups[pr["group"]] if o["market"] != pr["market"]]
+        # Market siyahısı botlar reyestrindən gəlir: data hələ olmasa belə market görünür
+        counts = Counter(pr["market"] for pr in products)
+        names = {pr["market"]: pr["market_name"] for pr in products}
+        markets = [{"key": k, "name": c.market_name, "count": counts.get(k, 0)} for k, c in MARKETS.items()]
+        markets += [{"key": k, "name": names[k], "count": n} for k, n in counts.items() if k not in MARKETS]
         _cache["payload"] = {
             "updated": raw.get("updated"),
             "products": products,
             "by_id": {p["id"]: p for p in products},
             "groups": groups,
-            "markets": sorted({(p["market"], p["market_name"]) for p in products}),
+            "markets": markets,
         }
         _cache["mtime"] = mtime
     return _cache["payload"]
@@ -121,7 +130,7 @@ def product(pid):
 def api_products():
     items = filter_products(request.args)
     limit = min(int(request.args.get("limit", 100)), 500)
-    slim = [{k: v for k, v in p.items() if k not in ("search", "history")} for p in items[:limit]]
+    slim = [{k: v for k, v in p.items() if k not in ("search", "history", "others")} for p in items[:limit]]
     return jsonify({"updated": get_data()["updated"], "count": len(items), "products": slim})
 
 
