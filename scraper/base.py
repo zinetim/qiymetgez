@@ -1,5 +1,6 @@
 """Bütün market botları üçün ümumi baza: sorğu, təkrar cəhd, səhifələmə, məhsul formatı."""
 import hashlib
+import os
 import random
 import re
 import time
@@ -10,8 +11,22 @@ import requests
 
 from core.textutil import parse_weight, unit_price
 
+# Defolt: özünü açıq təqdim edən bot. YOUR_USER yerinə GitHub adınızı yazın.
 UA = ("Mozilla/5.0 (compatible; QiymetgezBot/1.0; +https://github.com/YOUR_USER/qiymetgez) "
       "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36")
+# Bəzi saytlar yalnız "bot" sözünə görə 403 verir. Bunu diaqnostika (python -m scraper.diagnose)
+# göstərəcək. Seçim: SCRAPER_PROFILE=browser ətraf mühit dəyişəni. Saytın qaydalarını (robots.txt,
+# istifadə şərtləri) yoxladıqdan sonra istifadə edin.
+PROFILES = {
+    "bot": {"User-Agent": UA, "Accept-Language": "az,en;q=0.8"},
+    "browser": {
+        "User-Agent": ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                       "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"),
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "az,en;q=0.8",
+    },
+}
+BLOCK_CODES = (401, 403, 429, 503)
 
 
 class BaseScraper:
@@ -22,11 +37,14 @@ class BaseScraper:
     delay = (0.8, 1.6)     # sorğular arası fasilə (saniyə), saytı yormamaq üçün
     page_param = "page"    # səhifələmə parametri (nopCommerce: "pagenumber")
     extra_params = {}      # hər sorğuya əlavə parametrlər (məs. {"pagesize": "20"})
+    max_pages = 10         # bir kateqoriyada maksimum səhifə (market özü artıra bilər)
 
-    def __init__(self, details=False, max_pages=10, log=print):
-        self.details, self.max_pages, self.log = details, max_pages, log
+    def __init__(self, details=False, max_pages=None, log=print):
+        self.details, self.log = details, log
+        if max_pages:
+            self.max_pages = max_pages
         self.s = requests.Session()
-        self.s.headers.update({"User-Agent": UA, "Accept-Language": "az,en;q=0.8"})
+        self.s.headers.update(PROFILES.get(os.environ.get("SCRAPER_PROFILE", "bot"), PROFILES["bot"]))
 
     # ---- şəbəkə ----
     def get(self, url, retries=3):
@@ -35,6 +53,13 @@ class BaseScraper:
             try:
                 r = self.s.get(url, timeout=25)
                 if r.status_code == 404:
+                    return None
+                if r.status_code in BLOCK_CODES:
+                    # Blok olunmuşuq: təkrar-təkrar sınamırıq, səbəbi göstərib dayanırıq
+                    h = r.headers
+                    self.log(f"  ! {r.status_code} BLOK: {url}\n    server={h.get('server')} cf-ray={h.get('cf-ray')} "
+                             f"cf-mitigated={h.get('cf-mitigated')} retry-after={h.get('retry-after')}\n"
+                             f"    cavab: {r.text[:120]!r}\n    → python -m scraper.diagnose ilə səbəbi yoxlayın")
                     return None
                 r.raise_for_status()
                 r.encoding = "utf-8"

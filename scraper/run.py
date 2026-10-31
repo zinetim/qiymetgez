@@ -14,7 +14,7 @@ def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--market", action="append", help="yalnız bu market(lər)")
     ap.add_argument("--details", action="store_true", help="hər məhsulun öz səhifəsini də oxu (kod/barkod)")
-    ap.add_argument("--max-pages", type=int, default=6)
+    ap.add_argument("--max-pages", type=int, default=None, help="bir kateqoriyada maks. səhifə (defolt: marketin öz limiti)")
     ap.add_argument("--out", default=str(DEFAULT_OUT))
     a = ap.parse_args(argv)
 

@@ -104,3 +104,28 @@ def test_cards_show_other_market_prices():
     c = appmod.app.test_client()
     html = c.get("/?q=hicaz+paket").get_data(as_text=True)
     assert "Bazarstore" in html and "Araz Supermarket" in html and 'class="others"' in html
+
+
+def test_block_is_not_retried(monkeypatch):
+    """403 alınanda bot təkrar-təkrar sorğu göndərməməli, dayanmalıdır."""
+    from scraper.bazarstore import BazarstoreScraper
+    calls = []
+
+    class R:
+        status_code = 403
+        text = "Forbidden"
+        headers = {"server": "cloudflare", "cf-ray": "x"}
+
+    s = BazarstoreScraper(log=lambda *_: None)
+    monkeypatch.setattr(s.s, "get", lambda *a, **k: (calls.append(1), R())[1])
+    assert s.get("https://bazarstore.az/x") is None
+    assert len(calls) == 1
+
+
+def test_profile_env(monkeypatch):
+    from scraper.bazarstore import BazarstoreScraper
+    monkeypatch.setenv("SCRAPER_PROFILE", "browser")
+    assert "QiymetgezBot" not in BazarstoreScraper().s.headers["User-Agent"]
+    monkeypatch.setenv("SCRAPER_PROFILE", "")
+    assert "QiymetgezBot" in BazarstoreScraper().s.headers["User-Agent"]
+    assert BazarstoreScraper().max_pages == 80 and BazarstoreScraper(max_pages=5).max_pages == 5

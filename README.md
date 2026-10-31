@@ -84,3 +84,23 @@ GitHub Actions-da: **Actions → scrape → son işləmə → "Run scraper" add�
 ## Data faylı haqqında
 
 `data/products.json` botun yazdığı faylıdır. Zip-dəki versiya yalnız başlanğıc datadır (Araz 22 + Bazarstore 12 məhsul). Bot işlədikcə onu real data ilə əvəz edir. Bot yalnız öz marketinin məhsullarını yeniləyir, digər marketə toxunmur.
+
+## Bazarstore 403 (Forbidden) verirsə
+
+Bazarstore (nopCommerce) bəzən avtomatik sorğuları və ya server IP-lərini (Codespaces, GitHub Actions) bloklayır. Səbəbi tapmaq üçün:
+
+```bash
+python -m scraper.diagnose
+```
+
+Eyni səhifəni 3 variantla yoxlayır (bot / bot + pagesize / brauzer başlıqları) və robots.txt-i oxuyur:
+
+| Nəticə | Mənası | Nə etməli |
+|---|---|---|
+| A işləyir | Bloklanma yoxdur | `python -m scraper.run --market bazarstore` |
+| Yalnız C işləyir | Sayt "bot" adlı sorğuları süzür | Əvvəl saytın istifadə şərtlərinə və robots.txt-ə baxın. Qərar verirsinizsə GitHub → Settings → Secrets and variables → Actions → **Variables** → `SCRAPER_PROFILE` = `browser` |
+| Hamısı 403 | WAF/Cloudflare bu IP-ni və ya avtomatik girişi qəbul etmir | Proxy və ya captcha keçməyə çalışmayın. Bazarstore ilə əlaqə saxlayıb məlumat feed-i və ya yazılı icazə istəyin. Hələlik `scraper/markets.py`-da Bazarstore sətrini şərhə alın |
+
+Bot 403/429 alanda təkrar-təkrar sorğu göndərmir, dərhal dayanır və səbəbi log-a yazır. GitHub Actions-da Bazarstore addımı `continue-on-error` ilə işləyir, yəni bloklansa belə Araz datası yenilənir.
+
+**Kateqoriyalar:** Bazarstore-da üst kateqoriya səhifələri (məs. `/et-toyuq-baliq`, 59 səhifə) alt kateqoriyaların məhsullarını da göstərir. Hər kateqoriya yüzlərlə sorğu deməkdir, ona görə 4 üst kateqoriya ilə başlanılıb. Bazarstore üçün `--details` rejimi söndürülüb (minlərlə məhsul × əlavə sorğu = saatlar).

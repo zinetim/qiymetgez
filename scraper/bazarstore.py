@@ -31,29 +31,16 @@ class BazarstoreScraper(BaseScraper):
     base_url = "https://bazarstore.az"
     page_param = "pagenumber"
     extra_params = {"pagesize": "20"}
-    # Yeni kateqoriya: bura (ad, yol) əlavə edin. Yol saytdakı kateqoriya linkinin sonudur.
+    # Üst kateqoriya səhifələri alt kateqoriyaların məhsullarını da göstərir (et-toyuq-baliq: 59 səhifə).
+    # Yeni kateqoriya: (ad, yol) əlavə edin. Yol saytdakı kateqoriya linkinin sonudur.
+    # Diqqət: hər kateqoriya yüzlərlə məhsul = yüzlərlə sorğu. Əvvəl bir neçəsi ilə başlayın.
     categories = [
-        ("Təzə toyuq", "/teze-toyuq"),
-        ("Toyuq içalat", "/toyuq-icalat"),
-        ("Dondurulmuş toyuq", "/dondurulmus-toyuq"),
-        ("Bişmiş kolbasa", "/bismis-kolbasa"),
-        ("Sosiska", "/sosiska"),
-        ("Süd", "/sud"),
-        ("Qatıq", "/qatiq"),
-        ("Xama", "/xama"),
-        ("Yumurta", "/yumurta"),
-        ("Duru yağ (Günəbaxan)", "/duru-yag-gunebaxan"),
-        ("Çay", "/cay"),
-        ("Düyü", "/duyu"),
-        ("Makaron", "/makaron-2"),
-        ("Ketçup", "/ketcup"),
-        ("Mayonez", "/mayonez"),
-        ("Qazlı sular", "/qazsiz-ickiler"),
-        ("Meyvə suları", "/meyve-sulari"),
-        ("Qabyuyan maye", "/qabyuyan-maye"),
-        ("Yuyucu toz (avtomat)", "/yuyucu-toz-avtomat"),
-        ("Tualet kağızı", "/tualet-kagizi"),
+        ("Ət, Toyuq, Balıq", "/et-toyuq-baliq"),
+        ("Süd, Səhər yeməyi", "/sud-seher-yemeyi"),
+        ("Təməl qida", "/temel-qida"),
+        ("İçkilər", "/ickiler"),
     ]
+    max_pages = 80
 
     def _image(self, card):
         img = (card.select_one(".picture img") or card.find("img"))

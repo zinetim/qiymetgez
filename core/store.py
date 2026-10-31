@@ -20,7 +20,7 @@ def save(path, data):
     p.parent.mkdir(parents=True, exist_ok=True)
     fd, tmp = tempfile.mkstemp(dir=p.parent, suffix=".tmp")
     with os.fdopen(fd, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=1)
+        json.dump(data, f, ensure_ascii=False, separators=(",", ":"))
     os.replace(tmp, p)
 
 

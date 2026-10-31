@@ -18,8 +18,13 @@ jobs:
           python-version: "3.12"
           cache: pip
       - run: pip install -r requirements.txt
-      - name: Run scraper
-        run: python -m scraper.run --details
+      - name: Run scraper (Araz, detallı)
+        run: python -m scraper.run --market araz --details
+      - name: Run scraper (Bazarstore)
+        continue-on-error: true   # bloklansa belə Araz datası saxlanılsın
+        env:
+          SCRAPER_PROFILE: ${{ vars.SCRAPER_PROFILE }}   # boşdursa "bot"
+        run: python -m scraper.run --market bazarstore
       - name: Commit data
         run: |
           git config user.name "price-bot"
