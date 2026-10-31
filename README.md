@@ -4,7 +4,7 @@ Bot marketlərin saytından **ad, qiymət, köhnə qiymət, endirim, qramaj, kod
 sayt isə onları kartlarda göstərir, qiymət tarixçəsi və marketlər arası müqayisə verir.
 
 ```
-GitHub Actions (hər 6 saat)  →  python -m scraper.run  →  data/products.json  →  git push
+GitHub Actions (hər gün)  →  python -m scraper.run  →  data/products.json  →  git push
                                                                                    ↓
                                                       Render avtomatik yenidən yayımlayır (Flask + gunicorn)
 ```
@@ -21,7 +21,7 @@ python -m scraper.run --details      # botu işə sal (detallı rejim: hər məh
 python app.py                        # http://localhost:5000
 ```
 
-`data/products.json` içində artıq arazmarket.az-dan 22 məhsul var, ona görə sayt bot işləmədən də açılır.
+`data/products.json` içində artıq arazmarket.az-dan 22 və bazarstore.az-dan 12 məhsul var, ona görə sayt bot işləmədən də açılır.
 
 ## 2. GitHub
 
@@ -53,3 +53,16 @@ Pulsuz planda sayt 15 dəqiqə istifadəsiz qalanda yatır, ilk açılış 30-50
   öz yaddaşınıza yükləmək daha təhlükəsizdir. Eyni şey qiymət məlumatlarının istifadəsinə də aiddir: saytın istifadə şərtlərinə və `robots.txt`-ə baxın.
 - **Sayt dəyişsə** (Araz dizaynı yeniləyəndə) yalnız `scraper/araz.py` düzəlir. Testlər: `python -m pytest`.
 - **JS ilə yüklənən saytlar** üçün `requests` kifayət etməyə bilər, onda Playwright-a keçmək lazım olur.
+
+## Marketlər
+
+| Market | Fayl | Platforma | Səhifələmə | Qeyd |
+|---|---|---|---|---|
+| Araz Supermarket | `scraper/araz.py` | Next.js | `?page=N` | qiymət `5.99`, köhnə qiymət ikinci gəlir |
+| Bazarstore | `scraper/bazarstore.py` | nopCommerce | `?pagenumber=N&pagesize=20` | qiymət `5,99 ₼`, endirimdə **köhnə qiymət əvvəl** gəlir, şəkillər lazy-load |
+
+- Bazarstore kateqoriyaları `scraper/bazarstore.py` içindəki `categories` siyahısındadır (hazırda 20 ədəd). Əlavə etmək üçün saytdakı kateqoriya linkinin sonunu yazın (məs. `("Pendir", "/pendir")`).
+- Yalnız bir marketi işlətmək: `python -m scraper.run --market bazarstore`
+- Hər marketdə eyni kateqoriyaları izləyin, yoxsa müqayisə üçün ortaq məhsul tapılmaz (məs. Araz-a da süd, çay, yağ kateqoriyaları əlavə edin).
+- Marketlər arası eyni məhsul avtomatik tapılır: ad (hərf/ə-ö fərqi nəzərə alınmadan) + qramaj ≥ 75% uyğundursa, yaxud barkod eynidirsə.
+- Bot gündə bir dəfə işləyir (03:00 UTC). Saytları yormamaq üçün sorğular arasında 0.8-1.6 san fasilə var.

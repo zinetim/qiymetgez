@@ -2,7 +2,7 @@ name: scrape
 
 on:
   schedule:
-    - cron: "0 */6 * * *"   # hər 6 saatdan bir
+    - cron: "0 3 * * *"      # hər gün 07:00 (Bakı vaxtı)
   workflow_dispatch:         # əl ilə işə salmaq üçün
 
 permissions:

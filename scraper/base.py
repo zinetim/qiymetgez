@@ -1,6 +1,9 @@
 """Bütün market botları üçün ümumi baza: sorğu, təkrar cəhd, səhifələmə, məhsul formatı."""
+import hashlib
 import random
+import re
 import time
+from urllib.parse import urlencode
 from datetime import datetime, timezone
 
 import requests
@@ -17,8 +20,10 @@ class BaseScraper:
     base_url = ""
     categories = []        # [(kateqoriya adı, yol)]
     delay = (0.8, 1.6)     # sorğular arası fasilə (saniyə), saytı yormamaq üçün
+    page_param = "page"    # səhifələmə parametri (nopCommerce: "pagenumber")
+    extra_params = {}      # hər sorğuya əlavə parametrlər (məs. {"pagesize": "20"})
 
-    def __init__(self, details=False, max_pages=6, log=print):
+    def __init__(self, details=False, max_pages=10, log=print):
         self.details, self.max_pages, self.log = details, max_pages, log
         self.s = requests.Session()
         self.s.headers.update({"User-Agent": UA, "Accept-Language": "az,en;q=0.8"})
@@ -42,8 +47,10 @@ class BaseScraper:
         return None
 
     def page_url(self, path, page):
-        url = self.base_url + path
-        return url if page == 1 else f"{url}?page={page}"
+        params = dict(self.extra_params)
+        if page > 1:
+            params[self.page_param] = page
+        return self.base_url + path + (("?" + urlencode(params)) if params else "")
 
     # ---- hər market özü yazır ----
     def parse_listing(self, html, category):
@@ -84,7 +91,9 @@ class BaseScraper:
         if old and old <= r["price"]:
             old = None
         discount = r.get("discount") or (round((1 - r["price"] / old) * 100) if old else None)
-        code = r.get("code") or r["url"].rstrip("/").split("-")[-1]
+        code = str(r.get("code") or r["url"].rstrip("/").split("/")[-1].split("-")[-1])
+        if not re.fullmatch(r"[A-Za-z0-9._-]{1,40}", code):  # URL-də təhlükəsiz id
+            code = hashlib.md5(r["url"].encode()).hexdigest()[:10]
         return {
             "id": f"{self.market}-{code}",
             "market": self.market,

@@ -36,3 +36,43 @@ def test_matching_across_markets():
     assert a["compare_count"] == 2 and a["is_cheapest"] and not b["is_cheapest"]
     assert c["compare_count"] == 1
     assert len(groups) == 2
+
+
+def test_weight_gram_q():
+    assert parse_weight("GULUM ŞİRİN QARĞIDALI 425 Q")[:2] == (0.425, "kg")
+    assert parse_weight("Çips Lays Сыр, 140 q")[:2] == (0.14, "kg")
+    assert parse_weight("Yumurta 10 lu")[0] is None
+
+
+def test_bazarstore_parser():
+    from scraper.bazarstore import BazarstoreScraper
+    from tests.fixture_bazar import listing_html as bz, ROWS as BR
+    s = BazarstoreScraper()
+    items = s.parse_listing(bz(), "Təzə toyuq")
+    assert len(items) == len(BR) == 12
+    by = {i["code"]: i for i in items}
+    assert by["101"]["price"] == 5.99 and by["101"]["old_price"] is None
+    assert by["101"]["image"].endswith("00101_415.jpeg")          # lazy-load atributundan
+    assert (by["111"]["price"], by["111"]["old_price"]) == (1.89, 2.40)  # köhnə qiymət əvvəl
+    assert by["112"]["price"] == 1.69 and by["112"]["old_price"] is None  # vahid qiyməti mətni atıldı
+    assert s.page_url("/teze-toyuq", 1).endswith("/teze-toyuq?pagesize=20")
+    assert s.page_url("/teze-toyuq", 3).endswith("?pagesize=20&pagenumber=3")
+    f = s.finish(by["106"])
+    assert f["id"] == "bazarstore-106" and f["weight_value"] == 1.0
+
+
+def test_cross_market_real_names():
+    """Real Araz və Bazarstore adları avtomatik eyni qrupa düşməlidir."""
+    from scraper.araz import ArazScraper
+    from scraper.bazarstore import BazarstoreScraper
+    from tests.fixture import listing_html as az
+    from tests.fixture_bazar import listing_html as bz
+    a, b = ArazScraper(), BazarstoreScraper()
+    prods = [a.finish(r) for r in a.parse_listing(az(), "x")] + [b.finish(r) for r in b.parse_listing(bz(), "x")]
+    groups = annotate(prods)
+    by = {p["name"]: p for p in prods}
+    hicaz_a, hicaz_b = by["Hicaz Təzə Toyuq Paket 1kq"], by["HİCAZ TƏZƏ TOYUQ PAKET KQ"]
+    assert hicaz_a["group"] == hicaz_b["group"] and hicaz_a["compare_count"] == 2
+    mer_a, mer_b = by["Mercan Təzə Toyuq Paket Soyudulmuş 1kq"], by["MƏRCAN TƏZƏ TOYUQ PAKET KQ"]
+    assert mer_a["group"] == mer_b["group"]
+    assert mer_a["is_cheapest"] and not mer_b["is_cheapest"]   # 6.59 < 7.75

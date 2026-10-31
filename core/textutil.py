@@ -7,7 +7,7 @@ _MAP = str.maketrans({
 })
 
 WEIGHT_RE = re.compile(
-    r"(\d+(?:[.,]\d+)?)\s*(kq|kg|qr|gr|g|ml|lt|l|litr|eded|ed|ad)\b", re.I
+    r"(\d+(?:[.,]\d+)?)\s*(kq|kg|qr|gr|ml|litr|lt|eded|ed|ad|g|q|l)\b", re.I
 )
 STOP = {"kq", "kg", "qr", "gr", "g", "ml", "l", "aciq", "teze", "paket",
         "soyudulmus", "ed", "eded", "ad", "butov"}
@@ -31,7 +31,7 @@ def parse_weight(name: str):
         u = m.group(2)
         if u in ("kq", "kg"):
             return round(n, 4), "kg", (f"{_n(n)} kq" if n >= 1 else f"{_n(n * 1000)} qr")
-        if u in ("qr", "gr", "g"):
+        if u in ("qr", "gr", "g", "q"):
             kg = n / 1000
             return round(kg, 4), "kg", (f"{_n(kg)} kq" if kg >= 1 else f"{_n(n)} qr")
         if u == "ml":
