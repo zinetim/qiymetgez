@@ -1,0 +1,4 @@
+# Araz Supermarket kateqoriyaları. Hər sətir: tam link, yol və ya  Ad | yol
+# Araz menyusu JS ilə yüklənir, ona görə siyahını brauzerdən toplamaq lazımdır (README → "Araz kateqoriyaları").
+# Aşağıdakı sətir nümunədir, bot defolt olaraq onu özü də çəkir:
+Təzə ağ ətlər | /az/categories/teze-ag-etler-66

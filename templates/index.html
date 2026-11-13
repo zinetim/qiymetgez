@@ -2,11 +2,11 @@
 {% block content %}
 <section class="intro">
   <h1>Eyni məhsul, fərqli qiymət.</h1>
-  <p class="lead">{{ d.products|length }} məhsul, {{ d.markets|length }} market{% if deals %}, {{ deals }} endirimdə{% endif %}.</p>
+  <p class="lead">{{ d.products|length }} məhsul, {{ d.markets|length }} market{% if d.multi %}, {{ d.multi }} məhsul bir neçə marketdə müqayisə olunur{% endif %}{% if deals %}, {{ deals }} endirimdə{% endif %}.</p>
   <ul class="mkts">
-    <li><a href="{{ url_for('index', **dict(args, market='', page=1)) }}" {% if not args.market %}aria-current="true"{% endif %}>Hamısı <b>{{ d.products|length }}</b></a></li>
+    <li><a href="{{ url_for('index', **dict(args, market='', cat='', page=1)) }}" {% if not args.market %}aria-current="true"{% endif %}>Hamısı <b>{{ d.products|length }}</b></a></li>
     {% for m in d.markets %}
-    <li>{% if m.count %}<a href="{{ url_for('index', **dict(args, market=m.key, page=1)) }}" {% if args.market == m.key %}aria-current="true"{% endif %}>{{ m.name }} <b>{{ m.count }}</b></a>
+    <li>{% if m.count %}<a href="{{ url_for('index', **dict(args, market=m.key, cat='', page=1)) }}" {% if args.market == m.key %}aria-current="true"{% endif %}>{{ m.name }} <b>{{ m.count }}</b></a>
         {% else %}<span class="soon" title="Bot hələ bu marketin datasını yazmayıb">{{ m.name }} <b>0</b></span>{% endif %}</li>
     {% endfor %}
   </ul>
@@ -23,7 +23,11 @@
   <label>Kateqoriya
     <select name="cat">
       <option value="">Hamısı</option>
-      {% for c, n in cats %}<option value="{{ c }}" {{ 'selected' if args.cat == c }}>{{ c }} ({{ n }})</option>{% endfor %}
+      {% for mname, cats in d.cat_groups %}
+      <optgroup label="{{ mname }}">
+        {% for c, n in cats %}<option value="{{ c }}" {{ 'selected' if args.cat == c }}>{{ c }} ({{ n }})</option>{% endfor %}
+      </optgroup>
+      {% endfor %}
     </select>
   </label>
   <label>Sıralama
@@ -31,9 +35,10 @@
       {% for k, v in sorts.items() %}<option value="{{ k }}" {{ 'selected' if args.sort == k }}>{{ v[0] }}</option>{% endfor %}
     </select>
   </label>
+  <label class="chk"><input type="checkbox" name="cmp" value="1" {{ 'checked' if args.cmp == '1' }}> Yalnız müqayisəli</label>
   <noscript><button type="submit">Tətbiq et</button></noscript>
 </form>
-<script>document.querySelectorAll('#filters select').forEach(s => s.addEventListener('change', () => s.form.submit()));</script>
+<script>document.querySelectorAll('#filters select,#filters input[type=checkbox]').forEach(s => s.addEventListener('change', () => s.form.submit()));</script>
 
 {% if products %}
   <p class="count">{{ total }} nəticə{% if args.q %} · “{{ args.q }}”{% endif %}</p>
@@ -42,16 +47,17 @@
   {% if pages > 1 %}
   <nav class="pager" aria-label="Səhifələr">
     {% if page > 1 %}<a href="{{ url_for('index', **dict(args, page=page-1)) }}">Əvvəlki</a>{% endif %}
-    {% for n in range(1, pages + 1) %}
-      <a href="{{ url_for('index', **dict(args, page=n)) }}" {% if n == page %}aria-current="page"{% endif %}>{{ n }}</a>
+    {% for n in window %}
+      {% if n is none %}<span class="gap">…</span>
+      {% else %}<a href="{{ url_for('index', **dict(args, page=n)) }}" {% if n == page %}aria-current="page"{% endif %}>{{ n }}</a>{% endif %}
     {% endfor %}
     {% if page < pages %}<a href="{{ url_for('index', **dict(args, page=page+1)) }}">Növbəti</a>{% endif %}
   </nav>
   {% endif %}
 {% else %}
   <div class="empty">
-    <h2>Heç nə tapılmadı</h2>
-    <p>Axtarışı qısaldın və ya filtrləri sıfırlayın.</p>
+    <h2>{% if d.products %}Heç nə tapılmadı{% else %}Hələ data yoxdur{% endif %}</h2>
+    <p>{% if d.products %}Axtarışı qısaldın və ya filtrləri sıfırlayın.{% else %}GitHub Actions-da “scrape” işini işə salın, bot datanı yazacaq.{% endif %}</p>
     <a class="btn" href="{{ url_for('index') }}">Hamısını göstər</a>
   </div>
 {% endif %}

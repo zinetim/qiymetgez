@@ -9,7 +9,7 @@ _MAP = str.maketrans({
 WEIGHT_RE = re.compile(
     r"(\d+(?:[.,]\d+)?)\s*(kq|kg|qr|gr|ml|litr|lt|eded|ed|ad|g|q|l)\b", re.I
 )
-STOP = {"kq", "kg", "qr", "gr", "g", "ml", "l", "aciq", "teze", "paket",
+STOP = {"kq", "kg", "qr", "gr", "g", "q", "ml", "l", "aciq", "teze", "paket",
         "soyudulmus", "ed", "eded", "ad", "butov"}
 
 
@@ -23,7 +23,7 @@ def _n(x: float) -> str:
 
 
 def parse_weight(name: str):
-    """(dəyər, vahid, etiket) qaytarır. Vahid: kg | l | ad. Rəqəm yoxdursa 'kq' = çəkili mal."""
+    """(dəyər, vahid, etiket). Vahid: kg | l | ad. Rəqəm yoxdursa 'kq' = çəkili mal."""
     f = fold(name)
     m = WEIGHT_RE.search(f)
     if m:

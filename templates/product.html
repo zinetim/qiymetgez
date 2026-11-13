@@ -24,6 +24,7 @@
       {% if p.code %}<dt>Market kodu</dt><dd>{{ p.code }}</dd>{% endif %}
       {% if p.category %}<dt>Kateqoriya</dt><dd>{{ p.category }}</dd>{% endif %}
       <dt>İlk görünmə</dt><dd>{{ p.first_seen }}</dd>
+      {% if p.last_seen %}<dt>Son yoxlanış</dt><dd>{{ p.last_seen }}</dd>{% endif %}
     </dl>
     <a class="btn" href="{{ p.url }}" target="_blank" rel="noopener nofollow">Market saytında aç</a>
 

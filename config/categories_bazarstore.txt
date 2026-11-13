@@ -1,0 +1,2 @@
+# Bazarstore üçün əlavə kateqoriyalar (adətən lazım deyil: bot menyudan 14 üst + ~330 alt kateqoriyanı özü tapır).
+# Hər sətir: yol və ya  Ad | yol

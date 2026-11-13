@@ -6,8 +6,7 @@
 }
 @media (prefers-color-scheme: dark){
   :root{--bg:#0C1420; --card:#142033; --ink:#EDF1F7; --muted:#9AA7BD; --line:#26344B;
-    --tag:#FFD84D; --tag-ink:#231A00; --save:#5BDDA6; --save-bg:#0F3A2B; --accent:#8FA6FF;
-    --shadow:none;}
+    --tag:#FFD84D; --tag-ink:#231A00; --save:#5BDDA6; --save-bg:#0F3A2B; --accent:#8FA6FF; --shadow:none;}
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
@@ -16,7 +15,6 @@ a{color:inherit}
 .wrap{max-width:1180px;margin:0 auto;padding:0 20px}
 :focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
 
-/* header */
 .top{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
 .top-in{display:flex;gap:20px;align-items:center;padding-top:12px;padding-bottom:12px}
 .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.3rem;text-decoration:none;letter-spacing:-.02em}
@@ -28,16 +26,22 @@ a{color:inherit}
 button,.btn{font:600 .95rem Onest,sans-serif;background:var(--ink);color:var(--bg);border:0;border-radius:10px;padding:11px 18px;cursor:pointer;text-decoration:none;display:inline-block}
 button:hover,.btn:hover{opacity:.88}
 
-/* intro + filtrlər */
 .intro{padding:34px 0 8px}
 .intro h1{margin:0;font-size:clamp(1.7rem,4.2vw,2.6rem);line-height:1.1;letter-spacing:-.03em;font-weight:800}
 .lead{color:var(--muted);margin:8px 0 0;font-size:1.05rem}
-.filters{display:flex;flex-wrap:wrap;gap:12px;margin:22px 0 6px}
+.filters{display:flex;flex-wrap:wrap;gap:12px;margin:22px 0 6px;align-items:flex-end}
 .filters label{display:flex;flex-direction:column;gap:4px;font-size:.8rem;color:var(--muted);font-weight:500}
-.filters select{min-width:170px;padding:9px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font:500 .95rem Onest,sans-serif}
+.filters label.chk{flex-direction:row;align-items:center;gap:8px;padding:10px 4px;font-size:.9rem;color:var(--ink)}
+.filters select{min-width:170px;max-width:300px;padding:9px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font:500 .95rem Onest,sans-serif}
 .count{color:var(--muted);font-size:.9rem;margin:18px 0 12px}
 
-/* kartlar */
+.mkts{list-style:none;display:flex;flex-wrap:wrap;gap:8px;padding:0;margin:16px 0 0}
+.mkts a,.mkts .soon{display:inline-flex;gap:8px;align-items:center;padding:7px 13px;border:1.5px solid var(--line);background:var(--card);border-radius:999px;text-decoration:none;font-weight:600;font-size:.9rem}
+.mkts b{font-weight:700;color:var(--muted);font-size:.82rem}
+.mkts a[aria-current]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.mkts a[aria-current] b{color:inherit;opacity:.75}
+.mkts .soon{opacity:.55;border-style:dashed;cursor:help}
+
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:16px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow)}
 .card-img{position:relative;display:block;aspect-ratio:1/1;background:#fff;padding:14px}
@@ -58,13 +62,18 @@ button:hover,.btn:hover{opacity:.88}
 .price-row s{color:var(--muted);font-size:.95rem}
 .cmp{font-size:.82rem;color:var(--accent);font-weight:600;text-decoration:none}
 .cmp:hover{text-decoration:underline}
+.noimg{display:grid;place-items:center;width:100%;height:100%;font:800 3rem Onest,sans-serif;color:var(--muted);background:var(--bg);border-radius:10px}
+.others{list-style:none;margin:6px 0 0;padding:8px 0 0;border-top:1px dashed var(--line);display:flex;flex-direction:column;gap:3px}
+.others a{display:flex;gap:8px;align-items:baseline;text-decoration:none;font-size:.84rem}
+.others span{color:var(--muted);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.others i{font-style:normal;font-size:.78rem;font-weight:700}
+.others i.up{color:var(--save)}.others i.down{color:#C2410C}
 
-/* səhifələmə */
 .pager{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:30px 0}
 .pager a{padding:8px 13px;border:1px solid var(--line);background:var(--card);border-radius:9px;text-decoration:none;font-weight:600;font-size:.9rem}
 .pager a[aria-current]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.pager .gap{padding:8px 4px;color:var(--muted)}
 
-/* məhsul səhifəsi */
 .crumbs{margin:22px 0 14px;color:var(--muted);font-size:.9rem}
 .crumbs a{color:var(--muted)}
 .detail{display:grid;grid-template-columns:minmax(260px,420px) 1fr;gap:34px;align-items:start}
@@ -77,45 +86,13 @@ button:hover,.btn:hover{opacity:.88}
 .hist{margin-top:26px;color:var(--accent)}
 .hist h2,.compare h2,section>h2{font-size:1.15rem;margin:0 0 10px;color:var(--ink)}
 .hist svg{width:100%;max-width:340px;height:auto;display:block;background:var(--card);border:1px solid var(--line);border-radius:10px}
+
 .compare{margin:40px 0}
 .compare table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:block;overflow-x:auto}
 .compare th,.compare td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
 .compare th{font-size:.82rem;color:var(--muted);font-weight:600}
 .compare tr.me td{background:color-mix(in srgb,var(--tag) 22%,transparent)}
 .best{background:var(--save-bg);color:var(--save);font-size:.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-left:6px}
-
-.empty{text-align:center;padding:70px 0}
-.empty h2{margin:0 0 6px}
-.foot{margin-top:60px;border-top:1px solid var(--line);padding:22px 0;color:var(--muted);font-size:.85rem}
-.foot p{margin:4px 0}
-
-@media (max-width:720px){
-  .top-in{flex-wrap:wrap}.search{order:3;flex-basis:100%;max-width:none}
-  .detail{grid-template-columns:1fr}
-  .grid{grid-template-columns:repeat(2,1fr);gap:10px}
-  .card-body{padding:10px}.tag{font-size:1.15rem}
-  .filters select{min-width:0;width:100%}.filters label{flex:1 1 140px}
-}
-@media (prefers-reduced-motion:no-preference){.card{transition:transform .15s}.card:hover{transform:translateY(-2px)}}
-
-.noimg{display:grid;place-items:center;width:100%;height:100%;font:800 3rem Onest,sans-serif;color:var(--muted);background:var(--bg);border-radius:10px}
-
-/* market zolağı */
-.mkts{list-style:none;display:flex;flex-wrap:wrap;gap:8px;padding:0;margin:16px 0 0}
-.mkts a,.mkts .soon{display:inline-flex;gap:8px;align-items:center;padding:7px 13px;border:1.5px solid var(--line);background:var(--card);border-radius:999px;text-decoration:none;font-weight:600;font-size:.9rem}
-.mkts b{font-weight:700;color:var(--muted);font-size:.82rem}
-.mkts a[aria-current]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-.mkts a[aria-current] b{color:inherit;opacity:.75}
-.mkts .soon{opacity:.55;border-style:dashed;cursor:help}
-/* kartda digər marketlər */
-.others{list-style:none;margin:6px 0 0;padding:8px 0 0;border-top:1px dashed var(--line);display:flex;flex-direction:column;gap:3px}
-.others a{display:flex;gap:8px;align-items:baseline;text-decoration:none;font-size:.84rem}
-.others span{color:var(--muted);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.others i{font-style:normal;font-size:.78rem;font-weight:700}
-.others i.up{color:var(--save)}.others i.down{color:#C2410C}
-@media (prefers-color-scheme:dark){.others i.down{color:#FB923C}}
-
-/* müqayisə: qənaət qutusu, qiymət zolağı, fərq */
 .savebox{display:flex;flex-wrap:wrap;align-items:center;gap:6px 26px;background:var(--save-bg);color:var(--save);border-radius:14px;padding:14px 18px;margin:0 0 16px}
 .sb-main{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
 .sb-lbl{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;opacity:.85}
@@ -137,4 +114,17 @@ button:hover,.btn:hover{opacity:.88}
 .d-up{font-weight:700;color:#C2410C}
 .d-ok{color:var(--save);font-weight:600;font-size:.88rem;margin-left:6px}
 .pc{color:var(--muted);font-size:.85rem}
-@media (prefers-color-scheme:dark){.d-up{color:#FB923C}}
+@media (prefers-color-scheme:dark){.d-up,.others i.down{color:#FB923C}}
+
+.empty{text-align:center;padding:70px 0}
+.empty h2{margin:0 0 6px}
+.foot{margin-top:60px;border-top:1px solid var(--line);padding:22px 0;color:var(--muted);font-size:.85rem}
+.foot p{margin:4px 0}
+@media (max-width:720px){
+  .top-in{flex-wrap:wrap}.search{order:3;flex-basis:100%;max-width:none}
+  .detail{grid-template-columns:1fr}
+  .grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .card-body{padding:10px}.tag{font-size:1.15rem}
+  .filters select{min-width:0;width:100%;max-width:none}.filters label{flex:1 1 140px}
+}
+@media (prefers-reduced-motion:no-preference){.card{transition:transform .15s}.card:hover{transform:translateY(-2px)}}

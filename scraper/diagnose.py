@@ -1,10 +1,6 @@
 """403/blok səbəbini tapır. İstifadə:
-    python -m scraper.diagnose                       # Bazarstore, /et-toyuq-baliq
-    python -m scraper.diagnose https://bazarstore.az/teze-toyuq
-
-Eyni səhifəni 4 variantla yoxlayır:
-  A) bot, parametrsiz   B) bot + ?pagesize=20   C) adi brauzer başlıqları   D) 'open' (brauzer formatı + açıq kimlik)
-Sonra robots.txt-i oxuyur və botun kateqoriyalarının icazəli olub-olmadığını göstərir."""
+    python -m scraper.diagnose [url]
+A) bot  B) bot + ?pagesize=20  C) adi brauzer  D) 'open' (brauzer formatı + açıq kimlik); sonra robots.txt."""
 import sys
 import time
 
@@ -24,12 +20,12 @@ def probe(label, url, profile):
         print(f"{label}: ŞƏBƏKƏ XƏTASI {e}")
         return None
     h = r.headers
-    has_products = "product-item" in r.text
+    has = "product-item" in r.text
     print(f"{label}: HTTP {r.status_code} | server={h.get('server')} | cf-ray={h.get('cf-ray')} | "
-          f"cf-mitigated={h.get('cf-mitigated')} | {len(r.text)} simvol | məhsul-bloku={'VAR' if has_products else 'yox'}")
+          f"{len(r.text)} simvol | məhsul-bloku={'VAR' if has else 'yox'}")
     if r.status_code != 200:
         print(f"    cavab başlanğıcı: {r.text[:140]!r}")
-    return r.status_code, has_products
+    return r.status_code, has
 
 
 def main():
@@ -44,7 +40,7 @@ def main():
     print("\n--- robots.txt ---")
     base = "/".join(url.split("/")[:3])
     rules = None
-    for prof in ("open", "browser", "bot"):          # hansı profil keçirsə, onunla oxu
+    for prof in ("open", "browser", "bot"):
         try:
             r = requests.get(base + "/robots.txt", headers=PROFILES[prof], timeout=15)
         except requests.RequestException as e:
@@ -58,29 +54,23 @@ def main():
             break
         time.sleep(1)
     if rules is not None:
-        from .bazarstore import BazarstoreScraper
-        print("\n   Botun kateqoriyaları robots.txt-ə görə:")
-        for name, path in BazarstoreScraper.categories:
+        from .bazarstore import TOP_LEVEL
+        print("\n   Üst kateqoriyalar robots.txt-ə görə:")
+        for name, path in TOP_LEVEL:
             for target in (path, path + "?pagesize=20&pagenumber=2"):
                 print(f"     {'İCAZƏ VAR ' if robots.allowed(rules, target) else 'QADAĞANDIR'}  {target}")
 
     print("\n--- NƏTİCƏ ---")
     ok = lambda k: res.get(k) and res[k][0] == 200
     if ok("A"):
-        print("A işləyir: sayt bota icazə verir. Bazarstore botu normal işləməlidir.")
+        print("A işləyir: sayt bota icazə verir.")
     elif ok("D"):
-        print("D ('open' profil) işləyir: sayt yalnız 'bot' sözü olan UA-nı süzür. 'open' profil brauzer formatındadır,\n"
-              "amma 'Qiymetgez/1.0 (+repo ünvanı)' ilə kim olduğunuzu açıq göstərir. Bazarstore botu bunu defolt işlədir.")
+        print("D ('open') işləyir: sayt yalnız 'bot' sözü olan UA-nı süzür. Bazarstore botu 'open' profili ilə işləyir.")
     elif ok("C"):
-        print("Yalnız 'browser' profili keçir. Bu, saytın avtomatik girişi istəməməsi siqnalı ola bilər:\n"
-              "əvvəl istifadə şərtlərinə və robots.txt-ə baxın, mümkünsə Bazarstore ilə əlaqə saxlayın.\n"
+        print("Yalnız 'browser' profili keçir. İstifadə şərtlərinə və robots.txt-ə baxın, mümkünsə sayt ilə əlaqə saxlayın.\n"
               "Qərar verirsinizsə: GitHub → Settings → Secrets and variables → Actions → Variables → SCRAPER_PROFILE = browser.")
     else:
-        print("Hər variant bloklanıb: sayt (WAF/Cloudflare) bu IP-ni və ya avtomatik girişi qəbul etmir.\n"
-              "Proxy/captcha keçməyə çalışmayın. Daha düzgün yollar:\n"
-              "  1) Bazarstore ilə əlaqə: məlumat feed-i və ya yazılı icazə istəyin.\n"
-              "  2) Kodu başqa şəbəkədən (ev interneti) yoxlayın.\n"
-              "  3) Hələlik Bazarstore-u dayandırın (scraper/markets.py-da sətri şərhə alın).")
+        print("Hər variant bloklanıb. Proxy/captcha keçməyin: sayt ilə əlaqə saxlayıb feed və ya icazə istəyin.")
 
 
 if __name__ == "__main__":
