@@ -1,0 +1,58 @@
+<section class="compare">
+  <h2>Marketlərdə müqayisə</h2>
+  {% if same|length > 1 %}
+  {% set lo = same[0].price %}
+  {% set hi = same[-1].price %}
+  {% set save = hi - lo %}
+  {% set pct = ((save / hi) * 100)|round|int %}
+  {% set pricier = same|selectattr('price', 'gt', lo + 0.004)|list %}
+  {% if save > 0.004 %}
+  <div class="savebox">
+    <div class="sb-main">
+      <span class="sb-lbl">Ən ucuz</span>
+      <strong>{{ same[0].market_name }}</strong>
+      <span class="sb-price">{{ lo|money }} ₼</span>
+    </div>
+    <p class="sb-text">Ən bahalı marketdən <b>{{ save|money }} ₼ ({{ pct }}%)</b> ucuzdur.
+      {% if p.price > lo + 0.004 %}Baxdığınız məhsul ən ucuzdan <b>{{ (p.price - lo)|money }} ₼</b> baha satılır.
+      {% else %}Baxdığınız məhsul ən ucuz seçimdir.{% endif %}</p>
+  </div>
+  {% else %}
+  <p class="sub">Bütün marketlərdə qiymət eynidir.</p>
+  {% endif %}
+  <table class="cmp-table">
+    <thead><tr><th>Market</th><th>Məhsul</th><th>Qiymət</th><th>Ən ucuza görə fərq</th></tr></thead>
+    <tbody>
+    {% for x in same %}
+      {% set is_low = x.price <= lo + 0.004 %}
+      <tr class="{{ 'me' if x.id == p.id }} {{ 'low' if is_low }}">
+        <td class="mkt"><strong>{{ x.market_name }}</strong>{% if x.id == p.id %}<span class="here">baxdığınız</span>{% endif %}</td>
+        <td class="nm">
+          <a href="{{ url_for('product', pid=x.id) }}">{{ x.name }}</a>
+          <div class="sub">
+            {% if x.weight_label %}<span class="chip">{{ x.weight_label }}</span>{% endif %}
+            {% if x.unit_price %}<span>{{ x.unit_price|money }} ₼/{{ x.unit_label }}</span>{% endif %}
+            {% if x.discount %}<span class="dsc">−{{ x.discount }}% endirim</span>{% endif %}
+            <a class="ext" href="{{ x.url }}" target="_blank" rel="noopener nofollow">Market saytında aç ↗</a>
+          </div>
+        </td>
+        <td class="pcell">
+          <strong>{{ x.price|money }} ₼</strong>{% if x.old_price %} <s>{{ x.old_price|money }}</s>{% endif %}
+          <div class="bar" aria-hidden="true"><i style="width: {{ [ (x.price / hi * 100)|round|int, 8 ]|max }}%"></i></div>
+        </td>
+        <td class="gap">
+          {% if is_low %}
+            <span class="best">ən ucuz</span>
+            {% if pricier %}<span class="d-ok">növbətidən {{ (pricier[0].price - x.price)|money }} ₼ ucuz</span>{% endif %}
+          {% else %}
+            <span class="d-up">+{{ (x.price - lo)|money }} ₼</span> <span class="pc">(+{{ ((x.price - lo) / lo * 100)|round|int }}%)</span>
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="sub">Bu məhsul hələ başqa marketdə tapılmayıb. Yeni market əlavə olunduqca avtomatik müqayisə görünəcək.</p>
+  {% endif %}
+</section>
