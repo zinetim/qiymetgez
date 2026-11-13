@@ -129,3 +129,16 @@ def test_profile_env(monkeypatch):
     monkeypatch.setenv("SCRAPER_PROFILE", "")
     assert "QiymetgezBot" in BazarstoreScraper().s.headers["User-Agent"]
     assert BazarstoreScraper().max_pages == 80 and BazarstoreScraper(max_pages=5).max_pages == 5
+
+
+def test_compare_box():
+    """Məhsul bir neçə marketdə varsa, məhsul səhifəsində qənaət qutusu və fərq göstərilməlidir."""
+    import app as appmod
+    appmod._cache.update({"mtime": None, "payload": None})
+    d = appmod.get_data()
+    multi = [p for p in d["products"] if p["compare_count"] > 1]
+    if not multi:
+        return  # data hələ tək marketdədir
+    html = appmod.app.test_client().get("/m/" + multi[0]["id"]).get_data(as_text=True)
+    assert 'class="savebox"' in html or "qiymət eynidir" in html
+    assert "cmp-table" in html

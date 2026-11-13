@@ -114,3 +114,27 @@ button:hover,.btn:hover{opacity:.88}
 .others i{font-style:normal;font-size:.78rem;font-weight:700}
 .others i.up{color:var(--save)}.others i.down{color:#C2410C}
 @media (prefers-color-scheme:dark){.others i.down{color:#FB923C}}
+
+/* müqayisə: qənaət qutusu, qiymət zolağı, fərq */
+.savebox{display:flex;flex-wrap:wrap;align-items:center;gap:6px 26px;background:var(--save-bg);color:var(--save);border-radius:14px;padding:14px 18px;margin:0 0 16px}
+.sb-main{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.sb-lbl{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;opacity:.85}
+.sb-price{font-weight:800;font-size:1.5rem;letter-spacing:-.02em}
+.sb-text{margin:0;color:var(--ink);font-size:.95rem;flex:1;min-width:230px}
+.sb-text b{color:var(--save)}
+.cmp-table td.nm{white-space:normal;min-width:230px}
+.cmp-table .sub{margin-top:4px}
+.cmp-table .ext{color:var(--accent);font-size:.82rem;text-decoration:none;font-weight:600}
+.cmp-table .ext:hover{text-decoration:underline}
+.cmp-table .dsc{color:var(--save);font-weight:700;font-size:.82rem}
+.cmp-table .here{margin-left:8px;font-size:.72rem;font-weight:700;background:var(--tag);color:var(--tag-ink);padding:1px 8px;border-radius:6px}
+.cmp-table .pcell{min-width:150px}
+.cmp-table .pcell s{color:var(--muted);font-size:.85rem}
+.bar{height:6px;background:var(--line);border-radius:999px;margin-top:7px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--muted);border-radius:999px}
+.cmp-table tr.low .bar i{background:var(--save)}
+.cmp-table tr.low td.pcell strong{color:var(--save)}
+.d-up{font-weight:700;color:#C2410C}
+.d-ok{color:var(--save);font-weight:600;font-size:.88rem;margin-left:6px}
+.pc{color:var(--muted);font-size:.85rem}
+@media (prefers-color-scheme:dark){.d-up{color:#FB923C}}
